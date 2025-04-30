@@ -7,6 +7,11 @@
     <h2 class="text-lg font-semibold text-gray-800">Voter Management</h2>
     <div class="space-x-2">
         <a href="{{ route('voter-management.create') }}" class="inline-block bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-accent transition">Add Voter</a>
+        <form action="{{ route('voter-management.import') }}" method="POST" enctype="multipart/form-data" class="inline-block">
+            @csrf
+            <input type="file" name="file" required class="inline-block border rounded p-1 text-sm">
+            <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">Import Excel</button>
+        </form>
         <a href="{{ route('voter-management.export') }}" class="inline-block bg-accent text-white px-4 py-2 rounded-lg shadow hover:bg-primary transition">Export</a>
     </div>
 </div>

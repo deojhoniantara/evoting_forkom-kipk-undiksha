@@ -11,8 +11,14 @@ class Candidate extends Model
 
     protected $fillable = [
         'name',
+        'photo',
         'vision',
-        'mission'
+        'mission',
+        'is_active'
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function votes()

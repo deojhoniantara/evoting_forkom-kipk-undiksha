@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vote;
 use App\Models\Voter;
 use App\Models\Candidate;
-use App\Models\Vote;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -12,30 +13,29 @@ class AdminController extends Controller
     {
         $totalVoters = Voter::count();
         $totalVotes = Vote::count();
-        // Get the 10 most recent votes, with voter and candidate relationships
-        $recentVotes = Vote::with(['voter', 'candidate'])->latest()->take(10)->get();
+        $recentVotes = Vote::with('voter')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('totalVoters', 'totalVotes', 'recentVotes'));
     }
 
     public function statistics()
     {
-        $candidates = \App\Models\Candidate::withCount('votes')->get();
-        $totalVoters = \App\Models\Voter::count();
-        $totalVotes = \App\Models\Vote::count();
+        $candidates = Candidate::withCount('votes')->get();
+        $totalVotes = Vote::count();
+        $totalVoters = Voter::count();
 
-        return view('admin.statistics', compact('candidates', 'totalVoters', 'totalVotes'));
+        return view('admin.statistics', compact('candidates', 'totalVotes', 'totalVoters'));
     }
 
     public function voters()
     {
-        $voters = Voter::with('vote.candidate')->get();
+        $voters = Voter::with('vote')->get();
         return view('admin.voters', compact('voters'));
     }
 
     public function votes()
     {
-        $votes = Vote::with(['voter', 'candidate'])->get();
+        $votes = Vote::with('voter')->latest()->get();
         return view('admin.votes', compact('votes'));
     }
 }

@@ -42,7 +42,9 @@
             </div>
             <div class="ml-4">
                 <h3 class="text-gray-500 text-sm">Voting Progress</h3>
-                <p class="text-2xl font-semibold text-gray-800">{{ number_format(($totalVotes / $totalVoters) * 100, 1) }}%</p>
+                <p class="text-2xl font-semibold text-gray-800">
+                    {{ $totalVoters > 0 ? number_format(($totalVotes / $totalVoters) * 100, 1) : '0' }}%
+                </p>
             </div>
         </div>
     </div>
@@ -53,7 +55,7 @@
     <div class="bg-white rounded-xl shadow-sm p-6">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h2>
         <div class="space-y-4">
-            @foreach($recentVotes as $vote)
+            @forelse($recentVotes as $vote)
             <div class="flex items-center p-4 bg-gray-50 rounded-lg">
                 <div class="flex-shrink-0">
                     <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -70,7 +72,11 @@
                     <p class="text-xs text-gray-500">{{ $vote->created_at->diffForHumans() }}</p>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="text-center text-gray-500 py-4">
+                Belum ada aktivitas voting
+            </div>
+            @endforelse
         </div>
     </div>
 </div>

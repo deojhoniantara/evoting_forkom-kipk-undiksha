@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Voter;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\VoterImport; // pastikan kamu sudah membuat file ini
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -45,6 +47,17 @@ class VoterManagementController extends Controller
     {
         $voters = Voter::all();
         return view('admin.voter-management.export', compact('voters'));
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        Excel::import(new VoterImport, $request->file('file'));
+
+        return redirect()->route('voter-management.index')->with('success', 'Data pemilih berhasil diimpor.');
     }
 
     public function destroy($id)

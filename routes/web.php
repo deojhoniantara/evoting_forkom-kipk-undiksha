@@ -5,6 +5,9 @@ use App\Http\Controllers\VotingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VoterManagementController;
+use App\Http\Controllers\Admin\CandidateController;
+use App\Http\Controllers\Admin\VoteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +45,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     // Votes
     Route::get('/admin/votes', [AdminController::class, 'votes'])->name('admin.votes');
+    Route::get('/vote-result', [VoteController::class, 'getResult'])->name('vote.result');
 
     // Voter Management
     Route::prefix('admin/voter-management')->group(function () {
@@ -49,8 +53,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/create', [VoterManagementController::class, 'create'])->name('voter-management.create');
         Route::post('/', [VoterManagementController::class, 'store'])->name('voter-management.store');
         Route::get('/export', [VoterManagementController::class, 'export'])->name('voter-management.export');
+        Route::post('/import', [VoterManagementController::class, 'import'])->name('voter-management.import');
         Route::delete('/admin/voter-management/{voter}', [VoterManagementController::class, 'destroy'])->name('voter-management.destroy');
     });
+    
+    Route::resource('candidates', CandidateController::class);
+    Route::patch('candidates/{candidate}/toggle-active', [CandidateController::class, 'toggleActive'])
+        ->name('admin.candidates.toggle-active');
+    Route::get('/admin/candidates', [CandidateController::class, 'index'])->name('admin.candidates.index');
+    Route::get('/candidates/create', [CandidateController::class, 'create'])->name('admin.candidates.create');
+    Route::post('/candidates', [CandidateController::class, 'store'])->name('admin.candidates.store');
+    Route::get('/candidates/{candidate}/edit', [CandidateController::class, 'edit'])->name('admin.candidates.edit');
+    Route::put('/candidates/{candidate}', [CandidateController::class, 'update'])->name('admin.candidates.update');
+    Route::delete('/candidates/{candidate}', [CandidateController::class, 'destroy'])->name('admin.candidates.destroy');
+
 });
 
 // Authentication Routes
